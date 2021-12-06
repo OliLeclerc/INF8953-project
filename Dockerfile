@@ -61,5 +61,11 @@ RUN pip install --no-cache-dir -r requirements.dev.txt
 RUN python setup.py install
 WORKDIR /
 WORKDIR /inf8953_projet
-COPY . /inf8953_projet
+
+# Copy over just requirements.txt at first. That way, the Docker cache doesn't
+# expire until we actually change the requirements.
+COPY ./requirements.txt /inf8953_projet/
 RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . /inf8953_projet
+RUN python test.py
