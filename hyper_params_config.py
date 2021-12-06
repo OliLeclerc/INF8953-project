@@ -13,7 +13,7 @@ max_episode_length = 1000 # same for all for now
 hp_config = {
     Environment.SWIMMER : 
     {
-        "max_ep" : 100,
+        "max_ep" : 2000,
         "ka_penalty": 0,
         "V2": 
         {
