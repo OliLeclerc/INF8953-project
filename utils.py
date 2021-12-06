@@ -49,8 +49,8 @@ class ARSOutput():
     hyper_parameters: HyperParameters
     env: str
 
-def save_output(path:str, policy: Policy, rewards: list, hp: HyperParameters, env: str):
-    name = 'exp.pickle'
+def save_output(path:str, name:str,  policy: Policy, rewards: list, hp: HyperParameters, env: str):
+    name = name + '.pickle'
     if not os.path.exists(path):
         os.makedirs(path, exist_ok=True)
     output = ARSOutput(policy, rewards, hp, env)

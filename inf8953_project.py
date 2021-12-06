@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from base_class import *
 from utils import *
 import argparse
+import random
 import mujoco_py
 
 class Direction(Enum):
@@ -33,12 +34,15 @@ class ARS():
         self.seed = hp.seed
         self.max_nb_ep = hp.max_ep
         self.max_ep_length = hp.max_episode_length
+        self.output_path = output_path
 
-        self.monitor_env = Monitor(env, output_path, force=True, video_callable = lambda episode_id: True)
+        self.monitor_env = None#Monitor(env, output_path, force=True, video_callable = lambda episode_id: True)
     
     def run_episode(self, policy: Policy, direction: Direction = Direction.BEST.value, delta=0, render=False):
         temp_env = self.env
         if render:
+            if self.monitor_env is None:
+                self.monitor_env = Monitor(env, self.output_path, force=True, video_callable = lambda episode_id: True)
             temp_env = self.monitor_env
         temp_env.seed(self.seed)
         state = temp_env.reset()
@@ -91,8 +95,8 @@ def get_args():
     parser.add_argument('env_name', type=str,
                         help='Name of the MuJoCo Env')
 
-    parser.add_argument('seed', type=int, default = 1,
-                        help='Name of the MuJoCo Env')
+    parser.add_argument('seeds', nargs='+', type=int,
+                        help='Seed for the environnement')
 
     parser.add_argument('--r', action='store_true', default = False,
                         help='Whether or not sample video will be saved')
@@ -102,6 +106,8 @@ def get_args():
             
     parser.add_argument('--t', action='store_true',
                         help='If ars algo should be version -t')
+    parser.add_argument('--rs', action='store_true',
+                        help='Run over a hundred random seeds')
     args = parser.parse_args()
     return args
 
@@ -109,19 +115,27 @@ def get_args():
 if __name__ == '__main__':
     args = get_args()
 
+    seeds = args.seeds
+    render = args.r
+    if args.rs:
+        seeds = random.sample(range(1, 10000), 3)
+        render = False
     print()
     print('==============')
-    print(f'mujoco_env: {args.env_name} with seed : {args.seed}')
-    print(f'render: {args.r}')
+    print(f'mujoco_env: {args.env_name} with seeds : {seeds}')
+    print(f'render: {render}')
     print(f'is_V2: {args.is_v2}, is truncated: {args.t}')
     print('==============')
 
-    version = 'v2' if args.is_v2 else 'v1'
-    version += '-t' if args.t else ''
-    full_output_path = f'./outputs/{args.env_name}/{version}/{args.seed}/'
-    env, hp = get_env_and_hyper_params(args.env_name, is_v2=args.is_v2, truncated=args.t, seed=args.seed)
-    ars = ARS(env, hp, is_V2=args.is_v2, output_path = full_output_path)
-    policy, rewards = ars.execute(render=args.r)
-
-    #plt.plot(rewards)
-    save_output(f'{full_output_path}save/', policy, rewards, hp, args.env_name)
+    for seed in seeds:
+        print(f'With seed {seed}')
+        version = 'v2' if args.is_v2 else 'v1'
+        version += '-t' if args.t else ''
+        seed_path = str(seed)
+        if args.rs:
+            seed_path = f'/rs'
+        full_output_path = f'./outputs/{args.env_name}/{version}/{seed_path}/'
+        env, hp = get_env_and_hyper_params(args.env_name, is_v2=args.is_v2, truncated=args.t, seed=seed)
+        ars = ARS(env, hp, is_V2=args.is_v2, output_path = full_output_path)
+        policy, rewards = ars.execute(render=render)
+        save_output(f'{full_output_path}save/', str(seed), policy, rewards, hp, args.env_name)
