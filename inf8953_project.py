@@ -118,7 +118,7 @@ if __name__ == '__main__':
     seeds = args.seeds
     render = args.r
     if args.rs:
-        seeds = random.sample(range(1, 10000), 100)
+        seeds = random.sample(range(1, 100000), 100)
         render = False
     print()
     print('==============')

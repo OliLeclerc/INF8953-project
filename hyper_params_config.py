@@ -5,7 +5,7 @@ class Environment(Enum):
     CHEETAH = "HalfCheetah-v2"
     HOPPER = "Hopper-v2"
     SWIMMER = "Swimmer-v2"
-    WALKER = "Walker2D-v2"
+    WALKER = "Walker2d-v2"
     HUMAN = "Humanoid-v2"
 
 max_episode_length = 1000 # same for all for now
@@ -123,7 +123,7 @@ hp_config = {
             "max_iter" : 1000 
 
         },
-        "V_t": 
+        "V2-t": 
         {
             "n":60,
             "b":20,

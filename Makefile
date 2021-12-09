@@ -1,11 +1,11 @@
 DOCKER_NAME := inf8953_ars_image
 CONTAINER_NAME := inf8953_ars_container
 
-ENV_NAME := Swimmer-v2
-SEED:= 1904016 54 77  # can be a single seed or multiple seed: 10 346345 999
+ENV_NAME := Ant-v2
+SEED:= 1904016 19527252 1954056  # can be a single seed or multiple seed: 10 346345 999
 V2:= --is_v2 #leave empty if you want v1 else --is_v2
 t:= --t #leave empty if you want base version else --t
-rs:= # --rs if you want to run over a 100 random seed, else leave blank and it will take the given seeds
+rs:= #--rs #if you want to run over a 100 random seed, else leave blank and it will take the given seeds
 RENDER:= --r # if you want to render or not.
 
 build:
@@ -18,4 +18,7 @@ run:
 	
 clean:
 	docker image rm $(DOCKER_NAME)
+	
+	
+	
 	
