@@ -1,14 +1,7 @@
 # INF8953-project
+To run this project, you must have docker installed: https://docs.docker.com/get-docker/
+Then use make build to construct the image.
 
-docker build . -t inf8953
-#set amount of cpu you want to give
-docker run -i inf8953 --cpus-shares="2048"
 
-#run your image
-docker run -t inf8953
-
-#go on your docker container and run the file
-python inf8953_project.py ENV MUJOCO True/False
-
-#copy the results once finished with
-docker cp <containerId>:/file/path/within/container /host/path/target
+All of the differents arguments are defined at the top of the MakeFile
+Once they are updated and saved, use make run to launch the experiment.
